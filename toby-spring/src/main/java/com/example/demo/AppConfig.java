@@ -8,6 +8,9 @@ import com.example.demo.user.repository.UserDaoJdbc;
 import com.example.demo.user.service.TestUserService;
 import com.example.demo.user.service.UserService;
 import com.example.demo.user.service.UserServiceImpl;
+import com.example.demo.user.sqlservice.SimpleSqlService;
+import com.example.demo.user.sqlservice.SqlService;
+import com.example.demo.user.sqlservice.XmlSqlService;
 import java.util.Properties;
 import javax.sql.DataSource;
 import org.springframework.aop.aspectj.AspectJExpressionPointcut;
@@ -31,20 +34,26 @@ public class AppConfig {
 
     @Bean
     public UserDao userDao() {
-        return new UserDaoJdbc(dataSource);
+        UserDaoJdbc userDaoJdbc = new UserDaoJdbc(dataSource);
+        userDaoJdbc.setSqlService(sqlService());
+
+        return userDaoJdbc;
     }
 
     @Bean
-    public ConnectionMaker connectionMaker(){
+    public SqlService sqlService() {
+        return new XmlSqlService();
+    }
+
+    @Bean
+    public ConnectionMaker connectionMaker() {
         return new DConnentionMaker();
     }
 
-
     @Bean
-    public PlatformTransactionManager platformTransactionManager(){
+    public PlatformTransactionManager platformTransactionManager() {
         return new DataSourceTransactionManager(dataSource);
     }
-
 
     @Bean
     public DefaultPointcutAdvisor transactionAdvisor(){

@@ -9,3 +9,4 @@ CREATE TABLE users (
   recommend int not null,
   email varchar(255) not null
   );
+
